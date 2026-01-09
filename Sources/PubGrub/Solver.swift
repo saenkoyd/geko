@@ -78,14 +78,6 @@ public class PubGrubSolver<DP: PubGrubDependencyProvider> {
                     package: p, version: v, deps: dependencies
                 )
 
-                // TODO: I don't think this check can actually happen.
-                // We might want to put it under #[cfg(debug_assertions)].
-                if state.incompatibilityStore[depIncompats]
-                    .contains(where: { state.isTerminal(incompatibility: $0) })
-                {
-                    throw PubGrubError<P, V>
-                        .failure("Root package depends on itself at a different version?")
-                }
                 state.partialSolution.addVersion(
                     package: p,
                     version: v,

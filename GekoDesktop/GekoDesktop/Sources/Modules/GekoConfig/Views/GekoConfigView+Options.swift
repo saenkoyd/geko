@@ -44,7 +44,6 @@ fileprivate extension ProjectDescription.Config.GenerationOptions {
             "staticSideEffectsWarningTargets": "\(self.staticSideEffectsWarningTargets)",
             "enforceExplicitDependencies": "\(self.enforceExplicitDependencies)",
             "convertPathsInPodspecsToBuildableFolders": "\(self.convertPathsInPodspecsToBuildableFolders)",
-            "useOldLinkableDependencies": "\(self.useOldLinkableDependencies)",
             "addAstPathsToLinker": "\(self.addAstPathsToLinker)"
         ]
     }

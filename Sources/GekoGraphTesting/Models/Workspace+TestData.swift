@@ -37,7 +37,6 @@ extension Workspace.GenerationOptions {
             testScreenCaptureFormat: nil
         ),
         lastXcodeUpgradeCheck: Version? = nil,
-        generateSharedTestTarget: GenerateSharedTestTarget? = nil,
         commonSettings: [CommonSettings] = [],
         configurations: [String: BuildConfiguration.Variant] = ["Debug": .debug, "Release": .release]
     ) -> Self {
@@ -48,7 +47,6 @@ extension Workspace.GenerationOptions {
             renderMarkdownReadme: false,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .disabled,
-            generateSharedTestTarget: generateSharedTestTarget,
             commonSettings: commonSettings,
             configurations: configurations
         )

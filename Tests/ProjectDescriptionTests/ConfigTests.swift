@@ -9,7 +9,7 @@ final class ConfigTests: XCTestCase {
             cache: .cache(profiles: [
                 .profile(name: "Debug",
                          configuration: "Debug",
-                         platforms: [.iOS: .arm64]
+                         platforms: [.iOS: .options(arch: .arm64)]
                         )
             ]),
             generationOptions: .options(

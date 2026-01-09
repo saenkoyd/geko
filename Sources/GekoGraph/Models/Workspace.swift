@@ -23,7 +23,6 @@ extension Workspace {
             renderMarkdownReadme: false,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .disabled,
-            generateSharedTestTarget: nil,
             commonSettings: [],
             configurations: ["Debug": .debug, "Release": .release]
         ),

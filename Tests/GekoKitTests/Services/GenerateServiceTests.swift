@@ -59,8 +59,7 @@ final class GenerateServiceTests: GekoUnitTestCase {
                     noOpen: true,
                     sources: [],
                     scheme: nil,
-                    focusTests: false,
-                    noCache: false)
+                    focusTests: false)
             XCTFail("Must throw")
         } catch {
             XCTAssertEqual(error as NSError?, expectedError)
@@ -79,8 +78,7 @@ final class GenerateServiceTests: GekoUnitTestCase {
             noOpen: false,
             sources: [],
             scheme: nil,
-            focusTests: false,
-            noCache: false
+            focusTests: false
         )
 
         XCTAssertEqual(opener.openArgs.last?.0, workspacePath.pathString)
@@ -104,8 +102,7 @@ final class GenerateServiceTests: GekoUnitTestCase {
             noOpen: false,
             sources: [],
             scheme: nil,
-            focusTests: false,
-            noCache: false
+            focusTests: false
         )
 
         // Then
@@ -126,30 +123,7 @@ final class GenerateServiceTests: GekoUnitTestCase {
             noOpen: false,
             sources: ["test"],
             scheme: nil,
-            focusTests: false,
-            noCache: false
-        )
-
-        // Then
-        XCTAssertTrue(generatorFactory.invokedFocus)
-    }
-
-    func test_run_old_focus_generator() async throws {
-        // Given
-        let workspacePath = try AbsolutePath(validating: "/test.xcworkspace")
-
-        generator.generateStub = { _ in
-            workspacePath
-        }
-
-        // When
-        try await subject.run(
-            path: nil,
-            noOpen: false,
-            sources: [],
-            scheme: nil,
-            focusTests: false,
-            noCache: true
+            focusTests: false
         )
 
         // Then
@@ -170,8 +144,7 @@ final class GenerateServiceTests: GekoUnitTestCase {
             noOpen: false,
             sources: [],
             scheme: nil,
-            focusTests: false,
-            noCache: false
+            focusTests: false
         )
 
         // Then

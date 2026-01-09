@@ -34,7 +34,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Debug": .debug, "Release": .release]
             )
@@ -64,7 +63,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Debug": .debug, "Release": .release]
             )
@@ -95,7 +93,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false, 
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Debug": .debug, "Release": .release]
             )
@@ -131,7 +128,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Debug": .debug, "Release": .release]
             )
@@ -164,7 +160,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .enabled(testPlans: testPlanPathsMock),
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Release": .release, "Debug": .debug]
             )
@@ -196,7 +191,6 @@ final class WorkspaceGenerationOptionsManifestMapperTests: GekoTestCase {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Release": .release, "Debug": .debug]
             )

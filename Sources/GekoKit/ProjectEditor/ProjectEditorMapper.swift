@@ -112,7 +112,6 @@ final class ProjectEditorMapper: ProjectEditorMapping {
                 renderMarkdownReadme: false,
                 autogenerateLocalPodsProjects: .disabled,
                 autogenerateLocalPodsSchemes: .disabled,
-                generateSharedTestTarget: .none,
                 commonSettings: [],
                 configurations: ["Debug": .debug, "Release": .release]
             )

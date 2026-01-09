@@ -21,7 +21,7 @@ final class ResolvePathsTests: GekoUnitTestCase {
                     .profile(
                         name: "Default",
                         configuration: "Debug",
-                        platforms: [.iOS: .arm64]
+                        platforms: [.iOS: .options(arch: .arm64)]
                     )
                 ],
                 path: "@/.cache"

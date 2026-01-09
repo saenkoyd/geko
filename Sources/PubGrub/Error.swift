@@ -3,30 +3,21 @@ import Foundation
 /// Errors that may occur while solving dependencies.
 public enum PubGrubError<P: Package, V: Version>: Error {
     /// There is no solution for this set of dependencies.
-    // "No solution"
     case noSolution(DerivationTree<P, V>)
 
-    /// Error arising when the implementer of
-    /// [DependencyProvider](crate::solver::DependencyProvider)
-    /// returned an error in the method
-    /// [get_dependencies](crate::solver::DependencyProvider::get_dependencies).
-    //
+    /// Error arising when the implementer of DependencyProvider
+    /// returned an error in the method getDependencies
     case errorRetrievingDependencies(
         /// Package whose dependencies we want.
         package: P,
         /// Version of the package for which we want the dependencies.
         version: V
-        /// Error raised by the implementer of
-        /// [DependencyProvider](crate::solver::DependencyProvider).
-        // source: Box<dyn std::error::Error>
     )
 
-    /// Error arising when the implementer of
-    /// [DependencyProvider](crate::solver::DependencyProvider)
+    /// Error arising when the implementer of DependencyProvider
     /// returned a dependency on an empty range.
     /// This technically means that the package can not be selected,
     /// but is clearly some kind of mistake.
-    //
     case dependencyOnTheEmptySet(
         /// Package whose dependencies we want.
         package: P,
@@ -36,12 +27,10 @@ public enum PubGrubError<P: Package, V: Version>: Error {
         dependent: P
     )
 
-    /// Error arising when the implementer of
-    /// [DependencyProvider](crate::solver::DependencyProvider)
+    /// Error arising when the implementer of DependencyProvider
     /// returned a dependency on the requested package.
     /// This technically means that the package directly depends on itself,
     /// and is clearly some kind of mistake.
-    //
     case selfDependency(
         /// Package whose dependencies we want.
         package: P,
@@ -49,20 +38,15 @@ public enum PubGrubError<P: Package, V: Version>: Error {
         version: V
     )
 
-    /// Error arising when the implementer of
-    /// [DependencyProvider](crate::solver::DependencyProvider)
-    /// returned an error in the method
-    /// [choose_package_version](crate::solver::DependencyProvider::choose_package_version).
-    // "Decision making failed"
+    /// Error arising when the implementer of DependencyProvider
+    /// returned an error in the method choosePackageVersion
     case errorChoosingPackageVersion(String)
 
-    /// Error arising when the implementer of [DependencyProvider](crate::solver::DependencyProvider)
-    /// returned an error in the method [should_cancel](crate::solver::DependencyProvider::should_cancel).
-    // "We should cancel"
+    /// Error arising when the implementer of DependencyProvider
+    /// returned an error in the method shouldCancel
     case errorInShouldCancel(Error)
 
     /// Something unexpected happened.
-    // "{0}"
     case failure(String)
 }
 

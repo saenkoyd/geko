@@ -124,7 +124,7 @@ final class MockGeneratorFactory: GeneratorFactorying {
         ))
         return stubbedCacheResult
     }
-    
+
     var invokedFocus = false
     var invokedFocusCount = 0
     var invokedFocusParameters: (
@@ -141,7 +141,7 @@ final class MockGeneratorFactory: GeneratorFactorying {
             scheme: String?
         )]()
     var stubbedFocusResult: Generating!
-    
+
     func focus(
         config: GekoGraph.Config,
         focusedTargets: Set<String>,

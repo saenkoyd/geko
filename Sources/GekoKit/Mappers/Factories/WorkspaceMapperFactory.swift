@@ -86,10 +86,6 @@ public final class WorkspaceMapperFactory: WorkspaceMapperFactorying {
         )
 
         mappers.append(
-            GenerateSharedTestTargetMapper()
-        )
-
-        mappers.append(
             ProjectWorkspaceMapper(mapper: projectMapper)
         )
 

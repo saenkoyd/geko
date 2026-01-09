@@ -24,7 +24,6 @@ public final class CacheProfileContentHasher: CacheProfileContentHashing {
         var stringsToHash = [
             cacheProfile.name,
             cacheProfile.configuration,
-            cacheProfile.cachingTests.description,
             cacheProfile.platforms.map { "\($0.key):\($0.value.description)"}.sorted().joined(separator: ","),
             cacheProfile.options.description
         ]

@@ -11,7 +11,6 @@ public struct GekoCommand: AsyncParsableCommand {
             CleanCommand.self,
             DumpCommand.self,
             GraphCommand.self,
-            WorkspaceDumpCommand.self,
             PluginCommand.self,
             VersionCommand.self,
             TreeCommand.self,
@@ -57,8 +56,7 @@ public struct GekoCommand: AsyncParsableCommand {
         let processedArguments = Array(processArguments(arguments).dropFirst())
         var parsedError: Error?
         do {
-            var subcommandArguments = CommandLine.filterSubcommandArguments(from: arguments ?? CommandLine.arguments)
-            subcommandArguments.removeAll(where: { $0 == "--force" })
+            let subcommandArguments = CommandLine.filterSubcommandArguments(from: arguments ?? CommandLine.arguments)
 
             if
                 !CommandLine.arguments.contains("--generate-completion-script"),

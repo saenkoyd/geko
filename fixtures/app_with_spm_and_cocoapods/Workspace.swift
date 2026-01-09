@@ -7,7 +7,7 @@ let workspace = Workspace(
         "Features/FeatureOne",
     ],
     generationOptions: .options(
-        autogenerateLocalPodsProjects: .enabled(
+        autogenerateLocalPodsProjects: .automatic(
             [
                 "LocalPods/**/*.podspec"
             ]

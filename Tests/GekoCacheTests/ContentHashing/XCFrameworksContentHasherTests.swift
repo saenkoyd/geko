@@ -78,21 +78,21 @@ final class XCFrameworksContentHasherTests: GekoUnitTestCase {
         XCTAssertEqual(hashes, [:])
     }
 
-    func test_xcframeworksHashesh_returnExpectedResult() throws {
+    func test_xcframeworksHashes_returnsExpectedResult() throws {
         // Given
         let expectedHashes = [
-            filePath1: "6f15f07a12184046", // FooFramework
-            filePath2: "7fac543fea0f2ecf", // BarFramework
+            filePath1: "de1c9c5c1735fa98", // FooFramework
+            filePath2: "16b9097ab14ecec9", // BarFramework
         ]
-        
+
         xcframeworkMetadataProvider.swiftModuleFolderPathStub = try temporaryPath()
-        
+
         let profile = Cache.Profile.test(options: .options(swiftModuleCacheEnabled: true))
         system.swiftlangVersionStub = { "6.0.0" }
-        
+
         let xcframework1 = GraphDependency.testXCFramework(path: filePath1)
         let xcframework2 = GraphDependency.testXCFramework(path: filePath2)
-        
+
         let externalDependenciesGraph = DependenciesGraph(
             externalDependencies: [:],
             externalProjects: [:],
@@ -102,7 +102,7 @@ final class XCFrameworksContentHasherTests: GekoUnitTestCase {
                 "BarFramework": GekoGraph.DependenciesGraph.TreeDependency(version: "3.0.0", dependencies: [])
             ]
         )
-        
+
         let project1 = Project.test(path: try temporaryPath().appending(component: "f1"))
         let project2 = Project.test(path: try temporaryPath().appending(component: "f2"))
         let framework1 = makeFramework(project: project1, sources: [source1, source2])
@@ -125,9 +125,9 @@ final class XCFrameworksContentHasherTests: GekoUnitTestCase {
             ],
             externalDependenciesGraph: externalDependenciesGraph
         )
-        
+
         // When
-        
+
         let hashes = try subject.contentHashes(
             for: graph,
             cacheProfile: profile,
@@ -135,11 +135,11 @@ final class XCFrameworksContentHasherTests: GekoUnitTestCase {
             cacheOutputType: .framework,
             cacheDestination: .simulator
         )
-        
+
         // Then
         XCTAssertEqual(hashes, expectedHashes)
     }
-    
+
     private func makeFramework(
         project: Project,
         platform: Platform = .iOS,
@@ -163,7 +163,7 @@ final class XCFrameworksContentHasherTests: GekoUnitTestCase {
             project: project
         )
     }
-    
+
     private func createTemporarySourceFile(
         on temporaryDirectoryPath: AbsolutePath,
         name: String,

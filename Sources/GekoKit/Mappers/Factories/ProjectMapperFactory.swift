@@ -71,8 +71,6 @@ public final class ProjectMapperFactory: ProjectMapperFactorying {
 
         mappers.append(CocoapodsModuleMapProjectMapper())
 
-        mappers.append(GenerateSharedTestTargetApphostFilesProjectMapper())
-
         // Logfile noise suppression
         mappers.append(TargetActionDisableShowEnvVarsProjectMapper())
 

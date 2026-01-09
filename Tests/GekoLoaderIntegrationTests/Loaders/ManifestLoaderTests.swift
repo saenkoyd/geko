@@ -86,7 +86,7 @@ final class ManifestLoaderTests: GekoTestCase {
         import ProjectDescription
 
         let packageSettings = PackageSettings(
-            targetSettings: ["TargetA": ["OTHER_LDFLAGS": "-ObjC"]]
+            targetSettings: ["TargetA": .settings(base: ["OTHER_LDFLAGS": "-ObjC"])]
         )
 
         #endif

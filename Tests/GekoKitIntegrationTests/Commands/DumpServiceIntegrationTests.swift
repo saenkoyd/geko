@@ -233,8 +233,7 @@ final class DumpServiceTests: GekoTestCase {
                   "all": {
 
                   }
-                },
-                "useOldLinkableDependencies": false
+                }
               },
               "installOptions": {
                 "passthroughSwiftPackageManagerArguments": [

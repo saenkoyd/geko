@@ -67,7 +67,6 @@ public struct VersionRange<V: Version>: Equatable {
 
     /// Set of all possible versions
     public static func any() -> VersionRange<V> {
-        // .higherThan(version: V.lowest)
         .init(segments: [VersionInterval(.unbounded, .unbounded)])
     }
 

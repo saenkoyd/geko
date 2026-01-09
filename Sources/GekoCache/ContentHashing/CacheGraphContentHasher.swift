@@ -70,14 +70,12 @@ public final class CacheGraphContentHasher: CacheGraphContentHashing {
                 if unsafe {
                     unsafeFilterHashTarget(
                         $0,
-                        cacheProfile: cacheProfile,
-                        graphTraverser: graphTraverser
+                        cacheProfile: cacheProfile
                     )
                 } else {
                     filterHashTarget(
                         $0,
                         cacheProfile: cacheProfile,
-                        graphTraverser: graphTraverser,
                         focusedTargets: sideTable.workspace.focusedTargets
                     )
                 }
@@ -97,28 +95,22 @@ public final class CacheGraphContentHasher: CacheGraphContentHashing {
     private func filterHashTarget(
         _ target: GraphTarget,
         cacheProfile: GekoGraph.Cache.Profile,
-        graphTraverser: GraphTraversing,
         focusedTargets: Set<String>
     ) -> Bool {
         let product = target.target.product
         let name = target.target.name
-        let excludeTests = cacheProfile.cachingTests ? false : graphTraverser.dependsOnXCTest(path: target.path, name: name)
 
         return CacheConstants.cachableProducts.contains(product) &&
-            !focusedTargets.contains(name) &&
-            !excludeTests
+            !focusedTargets.contains(name)
     }
-    
+
     private func unsafeFilterHashTarget(
         _ target: GraphTarget,
-        cacheProfile: GekoGraph.Cache.Profile,
-        graphTraverser: GraphTraversing
+        cacheProfile: GekoGraph.Cache.Profile
     ) -> Bool {
         let product = target.target.product
         let name = target.target.name
-        let excludeTests = cacheProfile.cachingTests ? false : graphTraverser.dependsOnXCTest(path: target.path, name: name)
 
-        return CacheConstants.cachableProducts.contains(product) &&
-            !excludeTests
+        return CacheConstants.cachableProducts.contains(product)
     }
 }

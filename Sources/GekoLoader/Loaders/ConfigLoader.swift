@@ -54,8 +54,6 @@ public final class ConfigLoader: ConfigLoading {
         let generatorPaths = GeneratorPaths(manifestDirectory: configPath)
         try config.resolvePaths(generatorPaths: generatorPaths)
 
-        Environment.shared.useOldLinkableDependencies = config.generationOptions.useOldLinkableDependencies
-
         cachedConfigs[path] = config
         return config
     }

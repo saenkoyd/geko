@@ -118,7 +118,7 @@ struct PartialSolution<P: Package, V: Version> {
 
     mutating func addDecision(package: P, version: V) {
         // Check that add_decision is never used in the wrong context.
-        // if cfg!(debug_assertions) {
+        #if DEBUG
         guard var pa = packageAssignments[package] else {
             fatalError("Derivations must already exist")
         }
@@ -128,7 +128,7 @@ struct PartialSolution<P: Package, V: Version> {
         case let .derivations(term):
             precondition(term.contains(version: version))
         }
-        // }
+        #endif
         currentDecisionLevel = currentDecisionLevel.increment()
 
         pa.highestDecisionLevel = currentDecisionLevel
@@ -148,7 +148,6 @@ struct PartialSolution<P: Package, V: Version> {
         cause: Int,
         store: [Incompatibility<P, V>]
     ) {
-        // use std::collections::hash_map::Entry;
         let term = store[cause].get(package: package)!.negate()
         let datedDerivation = DatedDerivation<P, V>(
             globalIndex: nextGlobalIndex,
@@ -284,7 +283,7 @@ struct PartialSolution<P: Package, V: Version> {
             return true
         }
 
-        // Check none of the dependencies (new_incompatibilities)
+        // Check none of the dependencies (newIncompatibilities)
         // would create a conflict (be satisfied).
         if newIncompatibilities.allSatisfy(notSatisfied) {
             addDecision(package: package, version: version)
@@ -346,7 +345,7 @@ struct PartialSolution<P: Package, V: Version> {
     ///
     /// Question: This is possible since we added a "global_index" to every dated_derivation.
     /// It would be nice if we could get rid of it, but I don't know if then it will be possible
-    /// to return a coherent previous_satisfier_level.
+    /// to return a coherent previousSatisfierLevel.
     static func findSatisfier(
         incompat: Incompatibility<P, V>,
         packageAssignments: OrderedDictionary<P, PackageAssignments<P, V>>,

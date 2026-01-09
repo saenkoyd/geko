@@ -44,27 +44,6 @@ public protocol Environmenting: AnyObject {
     /// Returns true if the environment is a GitHub Actions environment
     var isGitHubActions: Bool { get }
 
-    /// Enabled impact analysis
-    var impactAnalysisEnabled: Bool { get }
-
-    /// Returns source ref for impact analysis
-    var impactSourceRef: String? { get }
-
-    /// Returns target ref for impact analysis
-    var impactTargetRef: String? { get }
-
-    /// Returns true if impact analysis should run in debug mode
-    var impactAnalysisDebug: Bool { get }
-
-    /// Enabled symlinks support
-    var impactAnalysisSymlinksSupportEnabled: Bool { get }
-
-    /// Returns list of targets marked as changed through env var
-    var impactAnalysisChangedTargets: [String] { get }
-
-    /// Returns list of targets whos product names marked as changed through env var
-    var impactAnalysisChangedProducts: [String] { get }
-
     /// Returns source ref for inspect
     var inspectSourceRef: String? { get }
 
@@ -73,9 +52,6 @@ public protocol Environmenting: AnyObject {
 
     /// Returns timeinterval for request timeout
     var requestTimeout: TimeInterval? { get }
-
-    /// Whether to use old linkable dependencies search logic
-    var useOldLinkableDependencies: Bool { get set }
 
     /// Sets up the local environment.
     func bootstrap() throws
@@ -190,34 +166,6 @@ public class Environment: Environmenting {
         }
     }
 
-    public var impactAnalysisEnabled: Bool {
-        ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.impactAnalysisEnabled] == "true"
-    }
-
-    public var impactSourceRef: String? {
-        ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.impactAnalysisSourceRef]
-    }
-
-    public var impactTargetRef: String? {
-        ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.impactAnalysisTargetRef]
-    }
-
-    public var impactAnalysisDebug: Bool {
-        ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.impactAnalysisDebug] == "true"
-    }
-
-    public var impactAnalysisSymlinksSupportEnabled: Bool {
-        ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.impactAnalysisSymlinksSupportEnabled] == "true"
-    }
-
-    public var impactAnalysisChangedTargets: [String] {
-        return commaSeparatedList(from: Constants.EnvironmentVariables.impactAnalysisChangedTargets)
-    }
-
-    public var impactAnalysisChangedProducts: [String] {
-        return commaSeparatedList(from: Constants.EnvironmentVariables.impactAnalysisChangedProducts)
-    }
-
     public var inspectSourceRef: String? {
         ProcessInfo.processInfo.environment[Constants.EnvironmentVariables.inspectSourceRef]
     }
@@ -270,8 +218,6 @@ public class Environment: Environmenting {
     public var settingsPath: AbsolutePath {
         directory.appending(component: "settings.json")
     }
-
-    public var useOldLinkableDependencies = false
 
     private func commaSeparatedList(from envVar: String) -> [String] {
         guard let envVar = ProcessInfo.processInfo.environment[envVar] else {

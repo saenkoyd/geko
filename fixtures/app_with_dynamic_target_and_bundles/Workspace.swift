@@ -6,11 +6,11 @@ let workspace = Workspace(
         "./"
     ],
     generationOptions: .options(
-        autogenerateLocalPodsProjects: .enabled(
+        autogenerateLocalPodsProjects: .automatic(
             [
                 "LocalPods/**/*.podspec"
             ]
-        ),        
+        ),
         configurations: [
             "Debug": .debug,
             "Release": .release

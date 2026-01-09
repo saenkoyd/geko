@@ -137,10 +137,6 @@ public final class GraphMapperFactory: GraphMapperFactorying {
         mappers.append(FrameworkSearchPathGraphMapper())
         mappers.append(CorrectSettingsGraphMapper())
         mappers.append(TransitiveResourcesGraphMapper())
-        if environment.impactAnalysisEnabled {
-            mappers.append(ImpactAnalysisGraphMapper())
-            mappers.append(TreeShakePrunedTargetsGraphMapper())
-        }
         return mappers
     }
 }

@@ -33,7 +33,6 @@ final class GekoWorkspaceRenderMarkdownReadmeMapperTests: GekoUnitTestCase {
             renderMarkdownReadme: true,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .disabled,
-            generateSharedTestTarget: nil,
             commonSettings: [],
             configurations: [:])
         )
@@ -77,7 +76,6 @@ final class GekoWorkspaceRenderMarkdownReadmeMapperTests: GekoUnitTestCase {
             renderMarkdownReadme: false,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .disabled,
-            generateSharedTestTarget: nil,
             commonSettings: [],
             configurations: [:])
         )

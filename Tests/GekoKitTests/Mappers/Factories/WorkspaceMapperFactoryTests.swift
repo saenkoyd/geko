@@ -25,7 +25,7 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         subject = nil
         super.tearDown()
     }
-    
+
     func test_default_contains_the_replace_local_references_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
@@ -37,7 +37,7 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         // Then
         XCTAssertContainsElementOfType(got, ReplaceLocalReferencesWorkspaceMapper.self)
     }
-    
+
     func test_default_contains_the_configurations_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
@@ -49,19 +49,7 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         // Then
         XCTAssertContainsElementOfType(got, ConfigurationsWorkspaceMapper.self)
     }
-    
-    func test_default_contains_the_generate_shared_test_targets_mapper() {
-        // Given
-        subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
-        let config = Config.test()
 
-        // When
-        let got = subject.default(config: config)
-
-        // Then
-        XCTAssertContainsElementOfType(got, GenerateSharedTestTargetMapper.self)
-    }
-    
     func test_default_contains_the_common_settings_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
@@ -73,7 +61,7 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         // Then
         XCTAssertContainsElementOfType(got, CommonSettingsMapper.self)
     }
-    
+
     func test_default_contains_resource_bundle_sign_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
@@ -157,7 +145,7 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         // Then
         XCTAssertContainsElementOfType(got, LastUpgradeVersionWorkspaceMapper.self)
     }
-    
+
     func test_cache_contains_the_generate_cache_project_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
@@ -170,12 +158,12 @@ final class WorkspaceMapperFactoryTests: GekoUnitTestCase {
         // Then
         XCTAssertContainsElementOfType(got, GenerateCacheProjectMapper.self)
     }
-    
+
     func test_default_contains_the_plugin_executor_mapper() {
         // Given
         subject = WorkspaceMapperFactory(projectMapper: SequentialProjectMapper(mappers: projectMapperFactory.default()))
         let config = Config.test()
-        
+
         // When
         let got = subject.default(config: config)
 

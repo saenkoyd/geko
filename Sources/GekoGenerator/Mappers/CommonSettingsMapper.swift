@@ -20,8 +20,8 @@ public final class CommonSettingsMapper: WorkspaceMapping {
         }
 
         let mappedSettings = try commonSettings.map { settings in
-            let regex = try settings.targetMask.map { try Regex($0) }
-            let exceptRegex = try settings.exceptMask.map { try Regex($0) }
+            let regex = try settings.targetRegexp.map { try Regex($0) }
+            let exceptRegex = try settings.exceptRegexp.map { try Regex($0) }
             return (regex, exceptRegex, settings)
         }
 

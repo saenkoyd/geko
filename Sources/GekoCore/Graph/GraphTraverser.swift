@@ -20,19 +20,14 @@ public class GraphTraverser: GraphTraversing {
     }
 
     private let graph: Graph
-    private let useOldLinkableDependencies: Bool
 
     private var conditionMapCalculated = false
     private var conditionMap: [GraphDependency: [GraphDependency: PlatformCondition.CombinationResult]] = [:]
 
     private let systemFrameworkMetadataProvider: SystemFrameworkMetadataProviding = SystemFrameworkMetadataProvider()
 
-    public required init(
-        graph: Graph,
-        useOldLinkableDependencies: Bool = Environment.shared.useOldLinkableDependencies
-    ) {
+    public required init(graph: Graph) {
         self.graph = graph
-        self.useOldLinkableDependencies = useOldLinkableDependencies
     }
 
     public func warmup() {
@@ -493,28 +488,24 @@ public class GraphTraverser: GraphTraversing {
     public func searchablePathDependencies(path: AbsolutePath, name: String) throws -> Set<GraphDependencyReference> {
         let deps = try linkableDependencies(path: path, name: name, shouldExcludeNonLinkableDependencies: false)
 
-        if useOldLinkableDependencies {
-            return deps.union(staticPrecompiledFrameworksDependencies(path: path, name: name))
-        } else {
-            if let target = target(path: path, name: name),
-                target.target.product == .unitTests || target.target.product == .uiTests,
-                let appHostTarget = unitTestHost(path: path, name: name)
-            {
-                // unit and ui tests can use the same dependencies as in host app without linking them
-                return deps.union(
-                    try searchablePathDependencies(path: appHostTarget.path, name: appHostTarget.target.name)
-                )
-            }
-
-            return deps
+        if let target = target(path: path, name: name),
+            target.target.product == .unitTests || target.target.product == .uiTests,
+            let appHostTarget = unitTestHost(path: path, name: name)
+        {
+            // unit and ui tests can use the same dependencies as in host app without linking them
+            return deps.union(
+                try searchablePathDependencies(path: appHostTarget.path, name: appHostTarget.target.name)
+            )
         }
+
+        return deps
     }
 
     public func linkableDependencies(path: AbsolutePath, name: String) throws -> Set<GraphDependencyReference> {
         try linkableDependencies(path: path, name: name, shouldExcludeNonLinkableDependencies: true)
     }
 
-    public func linkableDependenciesV2(
+    public func linkableDependencies(
         path: AbsolutePath,
         name: String,
         shouldExcludeNonLinkableDependencies: Bool
@@ -622,7 +613,7 @@ public class GraphTraverser: GraphTraversing {
             linkableDependenciesSearchCache[node] = []
             return []
         }
-        
+
         var result: Set<GraphDependency> = []
 
         // collect every transitive dependency
@@ -681,143 +672,6 @@ public class GraphTraverser: GraphTraversing {
         linkableDependenciesSearchCache[node] = result
 
         return result
-    }
-
-    // swiftlint:disable:next function_body_length
-    public func linkableDependencies(
-        path: AbsolutePath,
-        name: String,
-        shouldExcludeNonLinkableDependencies: Bool
-    ) throws -> Set<GraphDependencyReference> {
-        guard useOldLinkableDependencies else {
-            return try linkableDependenciesV2(
-                path: path,
-                name: name,
-                shouldExcludeNonLinkableDependencies: shouldExcludeNonLinkableDependencies
-            )
-        }
-
-        guard let target = target(path: path, name: name) else { return Set() }
-
-        var references = Set<GraphDependencyReference>()
-        let targetGraphDependency = GraphDependency.target(name: name, path: path)
-
-        // System libraries and frameworks
-        if target.target.canLinkStaticProducts() {
-            let transitiveSystemLibraries = transitiveLinkableStaticDependencies(from: targetGraphDependency)
-                .flatMap { dependency -> [GraphDependencyReference] in
-                    let dependencies = self.graph.dependencies[dependency, default: []]
-                    return dependencies.compactMap { dependencyDependency -> GraphDependencyReference? in
-                        guard case GraphDependency.sdk = dependencyDependency else { return nil }
-                        return dependencyReference(to: dependencyDependency, from: targetGraphDependency)
-                    }
-                }
-            references.formUnion(transitiveSystemLibraries)
-        }
-
-        // AppClip dependencies
-        if target.target.isAppClip {
-            let path = try systemFrameworkMetadataProvider.loadMetadata(
-                sdkName: "AppClip.framework",
-                status: .required,
-                platform: .iOS,
-                source: .system
-            )
-            .path
-            references.formUnion([
-                GraphDependencyReference.sdk(
-                    path: path,
-                    status: .required,
-                    source: .system,
-                    condition: .when([.ios])
-                )
-            ])
-        }
-
-        // Direct system libraries and frameworks
-        let directSystemLibrariesAndFrameworks = graph.dependencies[targetGraphDependency, default: []]
-            .compactMap { dependency -> GraphDependencyReference? in
-                guard case GraphDependency.sdk = dependency else { return nil }
-                return dependencyReference(to: dependency, from: targetGraphDependency)
-            }
-        references.formUnion(directSystemLibrariesAndFrameworks)
-
-        // Precompiled libraries and frameworks
-        let precompiled = graph.dependencies[.target(name: name, path: path), default: []]
-            .filter { $0.isPrecompiled }
-
-        let precompiledDependencies =
-            precompiled
-            .flatMap {
-                filterDependencies(from: $0)
-            }
-
-        let precompiledLibrariesAndFrameworks = Set(precompiled + precompiledDependencies)
-            .filter{ $0.isPrecompiledDynamicAndLinkable }
-            .compactMap { dependencyReference(to: $0, from: targetGraphDependency) }
-
-        references.formUnion(precompiledLibrariesAndFrameworks)
-
-        // Static libraries and frameworks / Static libraries' dynamic libraries
-        if target.target.canLinkStaticProducts() {
-            let transitiveStaticTargetReferences = transitiveLinkableStaticDependencies(from: targetGraphDependency)
-
-            // Exclude any static products linked in a host application
-            // however, for search paths it's fine to keep them included
-            let hostApplicationStaticTargets: Set<GraphDependency>
-            if target.target.product == .unitTests, shouldExcludeNonLinkableDependencies,
-                let hostApp = unitTestHost(path: path, name: name)
-            {
-                hostApplicationStaticTargets =
-                    transitiveLinkableStaticDependencies(from: .target(name: hostApp.target.name, path: hostApp.project.path))
-            } else {
-                hostApplicationStaticTargets = Set()
-            }
-
-            let staticDependenciesDynamicLibrariesAndFrameworks = transitiveStaticTargetReferences.flatMap { dependency in
-                self.graph.dependencies[dependency, default: []]
-                    .lazy
-                    .filter{ $0.isTarget }
-                    .filter(isDependencyDynamicTarget)
-            }
-
-            let staticDependenciesPrecompiledLibrariesAndFrameworks = transitiveStaticTargetReferences.flatMap { dependency in
-                self.graph.dependencies[dependency, default: []]
-                    .lazy
-                    .filter { $0.isPrecompiled && $0.isLinkable }
-            }
-
-            let allDependencies =
-                (transitiveStaticTargetReferences
-                    + staticDependenciesDynamicLibrariesAndFrameworks
-                    + staticDependenciesPrecompiledLibrariesAndFrameworks)
-
-            references.formUnion(
-                allDependencies
-                    .compactMap { dependencyReference(to: $0, from: targetGraphDependency) }
-            )
-            references.subtract(
-                hostApplicationStaticTargets
-                    .compactMap { dependencyReference(to: $0, from: targetGraphDependency) }
-            )
-        }
-
-        // Link dynamic libraries and frameworks
-        let dynamicLibrariesAndFrameworks = graph.dependencies[.target(name: name, path: path), default: []]
-            .filter(or(isDependencyDynamicLibrary, isDependencyFramework))
-            .compactMap { dependencyReference(to: $0, from: targetGraphDependency) }
-
-        references.formUnion(dynamicLibrariesAndFrameworks)
-
-        let graphDependency = GraphDependency.target(name: name, path: path)
-        if let ignoredDependencies = graph.ignoredDependencies[graphDependency] {
-            let ignoredReferences = ignoredDependencies.compactMap {
-                dependencyReference(to: $0, from: targetGraphDependency)
-            }
-            references.subtract(ignoredReferences)
-        }
-
-        return references
     }
 
     public func staticXCFrameworkDependencies(path: AbsolutePath, name: String) -> Set<GraphDependencyReference> {
@@ -1551,7 +1405,7 @@ public class GraphTraverser: GraphTraversing {
         else { return false }
         return canEmbedFrameworks(target: target.target)
     }
-    
+
     func canDependencyEmbedBundles(dependency: GraphDependency) -> Bool {
         guard case let GraphDependency.target(name, path, _) = dependency,
               let target = target(path: path, name: name) else { return false }
@@ -1690,30 +1544,6 @@ public class GraphTraverser: GraphTraversing {
                     GraphTarget(path: projectPath, target: target, project: project)
                 }
             })
-    }
-
-    private func staticPrecompiledFrameworksDependencies(
-        path: AbsolutePath,
-        name: String
-    ) -> [GraphDependencyReference] {
-        let targetGraphDependency = GraphDependency.target(name: name, path: path)
-        let precompiledStatic = graph.dependencies[targetGraphDependency, default: []]
-            .union(transitiveStaticDependencies(from: targetGraphDependency))
-            .filter { dependency in
-                switch dependency {
-                case let .framework(_, _, _, _, linking: linking, _, _):
-                    return linking == .static
-                case .xcframework, .library, .bundle, .target, .sdk, .macro:
-                    return false
-                }
-            }
-
-        let precompiledDependencies =
-            precompiledStatic
-            .flatMap { filterDependencies(from: $0) }
-
-        return Set(precompiledStatic + precompiledDependencies)
-            .compactMap { dependencyReference(to: $0, from: .target(name: name, path: path)) }
     }
 
     private func staticPrecompiledXCFrameworksDependencies(

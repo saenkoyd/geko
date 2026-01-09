@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Erokhin Sergey on 23.08.2024.
-//
-
 import Foundation
 import GekoGraph
 import ProjectDescription

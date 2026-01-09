@@ -5,7 +5,7 @@ let config = Config(
         .profile(
             name: "Default",
             configuration: "Debug",
-            platforms: [.iOS: .arm64],
+            platforms: [.iOS: .options(arch: .arm64)],
             scripts: [
                 .script(name: "SwiftGen", envKeys: ["SRCROOT", "PODS_ROOT"])
             ]

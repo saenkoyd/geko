@@ -14,10 +14,6 @@ extension GekoConfigView {
                         Text("Configuraton").foregroundStyle(.gray)
                         Text(profile.configuration)
                     }
-                    HStack {
-                        Text("cachingTests").foregroundStyle(.gray)
-                        Text("\(profile.cachingTests)")
-                    }
                     if !profile.platforms.isEmpty {
                         HStack {
                             Text("Platforms").foregroundStyle(.gray)

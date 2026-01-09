@@ -22,12 +22,6 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
     var options: CacheOptions
 
     @Flag(
-        name: [.customLong("focus")],
-        help: "[Deprecated] The command will cache all targets except those specified in sources."
-    )
-    var focus: Bool = false
-
-    @Flag(
         name: [.customLong("cache")],
         help: "The command will cache all targets except those specified in sources."
     )
@@ -38,13 +32,6 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
         help: "Command will ignore remote cache, and use only local storage instead."
     )
     var ignoreRemoteCache: Bool = false
-
-    @Flag(
-        name: [.customLong("no-cache")],
-        help:
-            "[Deprecated] Command will safely focus on the modules passed in the `sources` without replacing other with binary counterparts. Optionally works with `--focus-tests` and `scheme`"
-    )
-    var noCache: Bool = false
 
     @OptionGroup
     var manifestOptions: ManifestOptions
@@ -57,17 +44,9 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
 
         try ManifestOptionsService()
             .load(options: manifestOptions, path: path)
-        
-        /// Temporary solution for backward compatibility with --focus & --no-cache
-        var useCache = cache
-        if focus, !noCache {
-            useCache = true
-        } else if noCache {
-            useCache = false
-        }
 
         let fetchService = FetchService()
-        if try await fetchService.needFetch(path: path, cache: useCache) {
+        if try await fetchService.needFetch(path: path, cache: cache) {
             try await fetchService.run(
                 path: path,
                 update: false,
@@ -77,7 +56,7 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
             )
         }
 
-        if useCache {
+        if cache {
             try await CacheWarmService().run(
                 path: path,
                 profile: options.profile,
@@ -99,7 +78,6 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
                 sources: Set(options.sources),
                 scheme: options.scheme,
                 focusTests: options.focusTests,
-                noCache: noCache
             )
         }
 
@@ -107,7 +85,7 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
             [
                 "destination": AnyCodable(options.destination),
                 "focus_targets": AnyCodable(options.sources.count),
-                "use_cache": AnyCodable(useCache),
+                "use_cache": AnyCodable(cache),
                 "ignore_remote_cache": AnyCodable(ignoreRemoteCache),
                 "cacheable_targets": AnyCodable(CacheAnalytics.cacheableTargets),
                 "cacheable_targets_count": AnyCodable(CacheAnalytics.cacheableTargetsCount),
@@ -119,44 +97,5 @@ public struct GenerateCommand: AsyncParsableCommand, HasTrackableParameters {
                 "cache_hits": AnyCodable(CacheAnalytics.cacheHit()),
             ]
         )
-    }
-
-    public func validate() throws {
-        if cache, noCache {
-            throw ValidationError.inconsistentState
-        }
-        if noCache, !focus {
-            throw ValidationError.noCacheWithoutFocus
-        }
-        if focus {
-            // TODO: replace with error when abandoning --focus --no-cache
-            logger.warning("\(ValidationError.focusDeprecated.errorDescription!)")
-        }
-        if noCache {
-            // TODO: replace with error when abandoning --focus --no-cache
-            logger.warning("\(ValidationError.nocacheDeprecated.errorDescription!)")
-        }
-    }
-
-    enum ValidationError: LocalizedError {
-        case focusDeprecated
-        case nocacheDeprecated
-        /// deprecated
-        case noCacheWithoutFocus
-        /// deprecated
-        case inconsistentState
-
-        var errorDescription: String? {
-            switch self {
-            case .focusDeprecated:
-                return "--focus flag is deprecated, use the --cache flag"
-            case .nocacheDeprecated:
-                return "--no-cache flag is deprecated. You can focus on modules without cache by passing their names without --focus and --cache flags"
-            case .noCacheWithoutFocus:
-                return "--focus should be used when --no-cache is specified"
-            case .inconsistentState:
-                return "use only one, --cache or --no-cache flag"
-            }
-        }
     }
 }

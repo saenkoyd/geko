@@ -21,10 +21,10 @@ final class CacheAcceptanceTestsAllTargets: GekoAcceptanceTestCase {
 
         // Then
         // Check all expected targets was cached
-        XCTAssertStandardOutput(pattern: "Targets to be cached now count: 19")
+        XCTAssertStandardOutput(pattern: "Targets to be cached now count: 13")
         XCTAssertStandardOutput(pattern: "Start building cacheable targets for platform iOS")
-        XCTAssertStandardOutput(pattern: "Storing 19 cacheable targets")
-        XCTAssertStandardOutput(pattern: "Stored target: FeaturePodA, FeaturePodA-FeaturePodAResources, FeaturePodA-Unit-TestsGekoGenerated, FeaturePodAInterfaces, FeaturePodB, FeaturePodB-FeaturePodBResources, FeaturePodB-Unit-TestsGekoGenerated, FeaturePodBInterfaces, InterimSinglePod, InterimSinglePod-Unit-TestsGekoGenerated, MultiPod, MultiPod-MultiPodTestsResources, MultiPod-Unit-TestsGekoGenerated, MultiPodInterfaces, MultiPodMock, OrphanSinglePod, OrphanSinglePod-Unit-TestsGekoGenerated, SinglePod, SinglePod-Unit-TestsGekoGenerated")
+        XCTAssertStandardOutput(pattern: "Storing 13 cacheable targets")
+        XCTAssertStandardOutput(pattern: "Stored target: FeaturePodA, FeaturePodA-FeaturePodAResources, FeaturePodAInterfaces, FeaturePodB, FeaturePodB-FeaturePodBResources, FeaturePodBInterfaces, InterimSinglePod, MultiPod, MultiPod-MultiPodTestsResources, MultiPodInterfaces, MultiPodMock, OrphanSinglePod, SinglePod")
         XCTAssertStandardOutput(pattern: "All cacheable targets have been cached successfully as frameworks with simulator destination.")
 
         // Check FeautrePodA project remove all cached targets

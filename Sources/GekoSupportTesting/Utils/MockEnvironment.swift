@@ -37,7 +37,6 @@ public class MockEnvironment: Environmenting {
     public var inspectTargetRef: String? = nil
     public var targetHashesSaveEnabled: Bool = false
     public var swiftModuleCacheEnabled: Bool? = nil
-    public var useOldLinkableDependencies: Bool = false
 
     public var versionsDirectory: AbsolutePath {
         directory.path.appending(component: "Versions")

@@ -13,7 +13,7 @@ struct State<P: Package, V: Version> {
     let rootPackage: P
     let rootVersion: V
 
-    // Package -> [incompatibility id]
+    // Package -> incompatibility id
     var incompatibilities: OrderedDictionary<P, [Int]>
 
     // Set of incompatibility ids
@@ -84,7 +84,7 @@ struct State<P: Package, V: Version> {
     }
 
     /// Unit propagation is the core mechanism of the solving algorithm.
-    /// CF <https://github.com/dart-lang/pub/blob/master/doc/solver.md#unit-propagation>
+    /// https://github.com/dart-lang/pub/blob/master/doc/solver.md#unit-propagation
     mutating func unitPropagation(package: P) -> Result<Void, PubGrubError<P, V>> {
         unitPropagationBuffer.removeAll(keepingCapacity: true)
         unitPropagationBuffer.append(package)
@@ -149,7 +149,7 @@ struct State<P: Package, V: Version> {
     }
 
     /// Return the root cause and the backtracked model.
-    /// CF <https://github.com/dart-lang/pub/blob/master/doc/solver.md#unit-propagation>
+    /// CF https://github.com/dart-lang/pub/blob/master/doc/solver.md#unit-propagation
     mutating func conflictResolution(
         incompatibility: Int
     ) -> Result<(P, Int), PubGrubError<P, V>> {

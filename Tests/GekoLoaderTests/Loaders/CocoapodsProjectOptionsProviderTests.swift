@@ -17,7 +17,6 @@ final class CocoapodsProjectOptionsProviderTests: GekoUnitTestCase {
             renderMarkdownReadme: false,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .disabled,
-            generateSharedTestTarget: nil,
             commonSettings: [],
             configurations: [:]
         )
@@ -46,7 +45,6 @@ final class CocoapodsProjectOptionsProviderTests: GekoUnitTestCase {
             renderMarkdownReadme: false,
             autogenerateLocalPodsProjects: .disabled,
             autogenerateLocalPodsSchemes: .enabled(testPlans: testPlanPathsMock),
-            generateSharedTestTarget: nil,
             commonSettings: [],
             configurations: [:]
         )

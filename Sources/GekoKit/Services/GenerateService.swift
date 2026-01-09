@@ -36,14 +36,13 @@ final class GenerateService {
         noOpen: Bool,
         sources: Set<String>,
         scheme: String?,
-        focusTests: Bool,
-        noCache: Bool
+        focusTests: Bool
     ) async throws {
         let timer = clock.startTimer()
         let path = try self.path(path)
         let config = try configLoader.loadConfig(path: path)
         let generator: Generating
-        if !sources.isEmpty || scheme != nil || noCache {
+        if !sources.isEmpty || scheme != nil {
             generator = try generatorFactory.focus(
                 config: config,
                 focusedTargets: sources,

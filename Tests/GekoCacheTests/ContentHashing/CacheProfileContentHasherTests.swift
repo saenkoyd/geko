@@ -35,8 +35,8 @@ final class CacheProfileContentHasherTests: GekoUnitTestCase {
 
         // Then
         let hash = try subject.hash(cacheProfile: cacheProfile)
-        
-        XCTAssertEqual(hash, "Development;Debug;true;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,false")
+
+        XCTAssertEqual(hash, "Development;Debug;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,false")
         XCTAssertEqual(mockContentHasher.hashStringsCallCount, 1)
     }
 
@@ -51,7 +51,7 @@ final class CacheProfileContentHasherTests: GekoUnitTestCase {
 
         // Then
         let hash = try subject.hash(cacheProfile: cacheProfile)
-        XCTAssertEqual(hash, "Development;Debug;true;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,false")
+        XCTAssertEqual(hash, "Development;Debug;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,false")
         XCTAssertEqual(mockContentHasher.hashStringsCallCount, 1)
     }
 
@@ -68,7 +68,7 @@ final class CacheProfileContentHasherTests: GekoUnitTestCase {
 
         // Then
         let hash = try subject.hash(cacheProfile: cacheProfile)
-        XCTAssertEqual(hash, "Development;Debug;true;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;false,false,false")
+        XCTAssertEqual(hash, "Development;Debug;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;false,false,false")
         XCTAssertEqual(mockContentHasher.hashStringsCallCount, 1)
     }
 
@@ -85,10 +85,10 @@ final class CacheProfileContentHasherTests: GekoUnitTestCase {
 
         // Then
         let hash = try subject.hash(cacheProfile: cacheProfile)
-        XCTAssertEqual(hash, "Development;Debug;true;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,true,false")
+        XCTAssertEqual(hash, "Development;Debug;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,true,false")
         XCTAssertEqual(mockContentHasher.hashStringsCallCount, 1)
     }
-    
+
     func test_hash_withSwiftModuleCacheEnabled() throws {
         // When
         let cacheProfile = GekoGraph.Cache.Profile(
@@ -102,7 +102,7 @@ final class CacheProfileContentHasherTests: GekoUnitTestCase {
 
         // Then
         let hash = try subject.hash(cacheProfile: cacheProfile)
-        XCTAssertEqual(hash, "Development;Debug;true;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,true")
+        XCTAssertEqual(hash, "Development;Debug;iOS:Arch: arm64,os: 15.0.0,device: iPhone 12;true,false,true")
         XCTAssertEqual(mockContentHasher.hashStringsCallCount, 1)
     }
 }
