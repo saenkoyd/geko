@@ -1,3 +1,6 @@
+## Geko 1.0.1
+geko [patch] fix: missing directories in resource build phase when using podspec (#66)
+
 ## Geko 1.0.0
 geko [patch] fix: release (#61)
 geko [patch] fix pd and revert (#58)
